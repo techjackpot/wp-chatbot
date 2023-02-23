@@ -113,7 +113,7 @@ class Sixaxis_Wp_Chatbot_Admin {
 	 * @param  [type] $attr [description]
 	 * @return [type]       [description]
 	 */
-	public function three_fourths( $attr ) {
+	public function render_shortcode_chatbot( $attr ) {
 
 		$defaults = array(
 		);
@@ -123,7 +123,7 @@ class Sixaxis_Wp_Chatbot_Admin {
 		ob_start();
 		?>
 
-		<div class="chatbot-widget">Chatbot</div>
+		<div id="chatbot-widget">Chatbot</div>
 
 		<?php
 		$output = ob_get_clean();
