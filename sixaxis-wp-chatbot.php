@@ -10,12 +10,12 @@
  *
  * @link              https://github.com/techjackpot
  * @since             1.0.0
- * @package           Sixaxis_Wp_Chatbot
+ * @package           SixAxis_WP_ChatBot
  *
  * @wordpress-plugin
  * Plugin Name:       SixAxis WP ChatBot
  * Plugin URI:        https://github.com/Red7Digital/sixaxis-wp-chatbot
- * Description:       This is a description of the plugin.
+ * Description:       WP ChatBot by SixAxis
  * Version:           1.0.0
  * Author:            Lancelot Gordon
  * Author URI:        https://github.com/techjackpot

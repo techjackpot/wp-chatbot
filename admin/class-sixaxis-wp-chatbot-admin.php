@@ -100,4 +100,36 @@ class Sixaxis_Wp_Chatbot_Admin {
 
 	}
 
+	/**
+	 * Adds the shortcodes: [chatbot]
+	 * Hooked on init
+	 */
+	public function add_shortcodes() {
+		add_shortcode( 'chatbot', array( $this, 'render_shortcode_chatbot' ));
+	}
+
+	/**
+	 * Generates the content for [chatbot]
+	 * @param  [type] $attr [description]
+	 * @return [type]       [description]
+	 */
+	public function three_fourths( $attr ) {
+
+		$defaults = array(
+		);
+		$options = shortcode_atts( $defaults, $attr );
+
+
+		ob_start();
+		?>
+
+		<div class="chatbot-widget">Chatbot</div>
+
+		<?php
+		$output = ob_get_clean();
+
+		return $output;
+		/* @todo */
+	}
+
 }
