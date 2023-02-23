@@ -73,8 +73,8 @@ class Sixaxis_Wp_Chatbot_Public {
 		 * class.
 		 */
 
-		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sixaxis-wp-chatbot-public.css', array(), $this->version, 'all' );
-
+		// wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sixaxis-wp-chatbot-public.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name . '-vue-app', plugin_dir_url( __FILE__ ) . 'vue/css/app.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -96,7 +96,9 @@ class Sixaxis_Wp_Chatbot_Public {
 		 * class.
 		 */
 
-		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-public.js', array( 'jquery' ), $this->version, false );
+		// wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-public.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name . '-vue-vendors', plugin_dir_url( __FILE__ ) . 'vue/js/chunk-vendors.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name . '-vue-app', plugin_dir_url( __FILE__ ) . 'vue/js/app.js', array( 'jquery' ), $this->version, false );
 	}
 
 	/**
@@ -118,8 +120,9 @@ class Sixaxis_Wp_Chatbot_Public {
 		);
 		$options = shortcode_atts( $defaults, $attr );
 
-		wp_enqueue_style( $this->plugin_name );
-		wp_enqueue_script( $this->plugin_name );
+		wp_enqueue_style( $this->plugin_name . '-vue-app' );
+		wp_enqueue_script( $this->plugin_name . '-vue-vendors' );
+		wp_enqueue_script( $this->plugin_name . '-vue-app' );
 
 		ob_start();
 		?>
