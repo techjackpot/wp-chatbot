@@ -73,7 +73,7 @@ class Sixaxis_Wp_Chatbot_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sixaxis-wp-chatbot-public.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sixaxis-wp-chatbot-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -96,8 +96,47 @@ class Sixaxis_Wp_Chatbot_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-public.js', array( 'jquery' ), $this->version, false );
-
+		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-public.js', array( 'jquery' ), $this->version, false );
 	}
 
+	/**
+	 * Adds the shortcodes: [chatbot]
+	 * Hooked on init
+	 */
+	public function add_shortcodes() {
+		add_shortcode( 'chatbot', array( $this, 'render_shortcode_chatbot' ));
+	}
+
+	/**
+	 * Generates the content for [chatbot]
+	 * @param  [type] $attr [description]
+	 * @return [type]       [description]
+	 */
+	public function render_shortcode_chatbot( $attr ) {
+
+		$defaults = array(
+		);
+		$options = shortcode_atts( $defaults, $attr );
+
+		wp_enqueue_style( $this->plugin_name );
+		wp_enqueue_script( $this->plugin_name );
+
+		ob_start();
+		?>
+
+		<div id="chatbot-widget">Chatbot</div>
+
+		<?php
+		$output = ob_get_clean();
+
+		return $output;
+		/* @todo */
+	}
+
+	/**
+	 * Embed chatbot widget as shortcode
+	 */
+	public function embed_widget() {
+		echo do_shortcode('[chatbot]');
+	}
 }
