@@ -112,4 +112,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.sc-launcher {
+  z-index: 9999;
+}
+.sc-chat-window {
+  z-index: 9999;
+}
 </style>
