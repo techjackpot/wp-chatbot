@@ -76,6 +76,7 @@ export default {
       this.showTypingIndicator = '...'
       this.$http.post('chatbot/ask', {
         question: message.data.text,
+        type: 'embed',
       })
       .then(response => response.data.data)
       .then((data) => {
