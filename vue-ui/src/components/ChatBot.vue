@@ -8,21 +8,13 @@
       :isOpen="isChatOpen"
       :close="closeChat"
       :open="openChat"
-      :showEmoji="false"
-      :showFile="false"
-      :showEdition="true"
-      :showDeletion="true"
       :showTypingIndicator="showTypingIndicator"
-      :showLauncher="true"
-      :showCloseButton="true"
       :colors="colors"
-      :alwaysScrollToBottom="alwaysScrollToBottom"
-      :messageStyling="messageStyling"
-      @onType="handleOnType"
-      @edit="editMessage"
+      title="SixAxis Support"
+      disableUserListToggle
     >
-      <template v-slot:header>
-        <div class="sc-header--title">SixAxis</div>
+      <template v-slot:user-avatar="{}">
+        <div></div>
       </template>
     </beautiful-chat>
   </div>
@@ -35,51 +27,49 @@ export default {
       participants: [
         {
           id: 'bot',
-          name: 'Agent',
+          name: 'Support',
         },
-        {
-          id: 'customer',
-          name: 'Customer',
-        }
       ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
       messageList: [
       ], // the list of the messages to show, can be paginated and adjusted dynamically
-      newMessagesCount: 2,
+      newMessagesCount: 0,
       isChatOpen: false, // to determine whether the chat window should be open or closed
       showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
       colors: {
         header: {
-          bg: '#4e8cff',
-          text: '#ffffff'
+          bg: '#D32F2F',
+          text: '#fff'
         },
         launcher: {
-          bg: '#4e8cff'
+          bg: '#D32F2F'
         },
         messageList: {
-          bg: '#ffffff'
+          bg: '#fff'
         },
         sentMessage: {
-          bg: '#4e8cff',
-          text: '#ffffff'
+          bg: '#F44336',
+          text: '#fff'
         },
         receivedMessage: {
           bg: '#eaeaea',
           text: '#222222'
         },
         userInput: {
-          bg: '#f4f7f9',
-          text: '#565867'
-        }
+          bg: '#fff',
+          text: '#212121'
+        },
+        userList: {
+          bg: '#fff',
+          text: '#212121'
+        },
       }, // specifies the color scheme for the component
-      alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
-      messageStyling: false // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
     }
   },
   methods: {
     sendMessage (text) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.onMessageWasSent({ author: 'support', type: 'text', data: { text } })
+        this.onMessageWasSent({ author: 'me', type: 'text', data: { text } })
       }
     },
     onMessageWasSent (message) {
@@ -95,21 +85,8 @@ export default {
       // called when the user clicks on the botton to close the chat
       this.isChatOpen = false
     },
-    handleScrollToTop () {
-      // called when the user scrolls message list to top
-      // leverage pagination for loading another page of messages
-    },
-    handleOnType () {
-      console.log('Emit typing event')
-    },
-    editMessage(message){
-      const m = this.messageList.find(m=>m.id === message.id);
-      m.isEdited = true;
-      m.data.text = message.data.text;
-    }
   },
   mounted() {
-    console.log('chat bot widget mounted');
   },
 }
 </script>
