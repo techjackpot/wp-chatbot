@@ -111,7 +111,7 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .sc-launcher {
   z-index: 9999;
 }
