@@ -66,15 +66,36 @@ export default {
     }
   },
   methods: {
-    sendMessage (text) {
+    receiveMessage (text) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.onMessageWasSent({ author: 'me', type: 'text', data: { text } })
+        this.onMessageWasSent({ author: 'bot', type: 'text', data: { text } })
       }
+    },
+    requireReply (message) {
+      this.showTypingIndicator = '...'
+      this.$http.post('chatbot/ask', {
+        question: message.data.text,
+      })
+      .then(response => response.data.data)
+      .then((data) => {
+        const {answer} = data
+        this.receiveMessage(answer)
+      })
+      .catch(e => {
+        console.log(e);
+      })
+      .finally(() => {
+        this.showTypingIndicator = ''
+      })
     },
     onMessageWasSent (message) {
       // called when the user sends a message
       this.messageList = [ ...this.messageList, message ]
+      
+      if (message.author == 'me') {
+        this.requireReply(message)
+      }
     },
     openChat () {
       // called when the user clicks on the fab button to open the chat
