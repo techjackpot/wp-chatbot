@@ -11,6 +11,7 @@
       :showTypingIndicator="showTypingIndicator"
       :colors="colors"
       title="SixAxis Support"
+      alwaysScrollToBottom
       disableUserListToggle
     >
       <template v-slot:user-avatar="{}">
@@ -24,6 +25,28 @@
 export default {
   data() {
     return {
+      log: {
+        ip: '',
+        sent: false,
+        enter_at: new Date(),
+        exit_at: new Date(),
+      },
+      prefillTimerID: null,
+      prefills: [
+        {
+          id: 'email',
+          type: 'email',
+          filled: false,
+          label: `What is you email? (We don't spam... I promise)`,
+        },
+        {
+          id: 'zip',
+          type: 'zip',
+          filled: false,
+          label: `What is your zip/postal code?`,
+        },
+      ],
+      everTouched: false,
       participants: [
         {
           id: 'bot',
@@ -31,8 +54,9 @@ export default {
         },
       ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
       messageList: [
+        { type: 'text', author: 'bot', data: { text: `Hello, thank you for visiting. How may I help you?` }, },
       ], // the list of the messages to show, can be paginated and adjusted dynamically
-      newMessagesCount: 0,
+      newMessagesCount: 1,
       isChatOpen: false, // to determine whether the chat window should be open or closed
       showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
       colors: {
@@ -66,10 +90,23 @@ export default {
     }
   },
   methods: {
+    checkPrefills() {
+      const prefill = this.prefills.find(prefill => !prefill.filled);
+      if (prefill) {
+        this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
+        this.addNewMessage({ author: 'bot', type: 'text', data: { text: prefill.label }, prefill_id: prefill.id, }, false);
+      } else {
+        this.addNewMessage({ type: 'text', author: 'bot', data: { text: `Additional questions?` }, }, false);
+      }
+    },
     receiveMessage (text) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.onMessageWasSent({ author: 'bot', type: 'text', data: { text } })
+        this.addNewMessage({ author: 'bot', type: 'text', data: { text } })
+
+        if (text.startsWith(`Sorry, I don't know that as yet.`)) {
+          // this.checkPrefills();
+        }
       }
     },
     requireReply (message) {
@@ -90,10 +127,32 @@ export default {
         this.showTypingIndicator = ''
       })
     },
-    onMessageWasSent (message) {
-      // called when the user sends a message
+    addNewMessage (message, check_prefill = true) {
       this.messageList = [ ...this.messageList, message ]
+      if (this.prefillTimerID) {
+        clearTimeout(this.prefillTimerID);
+      }
+      if (!check_prefill) {
+        return
+      }
+      this.prefillTimerID = setTimeout(() => {
+        this.checkPrefills();
+      }, 20 * 1000)
+    },
+    onMessageWasSent (message) {
+      if (!this.everTouched) {
+        this.everTouched = true;
+      }
+      const lastMessage = this.messageList[this.messageList.length - 1];
+
+      // called when the user sends a message
+      this.addNewMessage(message, false);
       
+      if (lastMessage.prefill_id) {
+        this.prefills.find(prefill => prefill.id == lastMessage.prefill_id).filled = true;
+        this.checkPrefills();
+        return;
+      }
       if (message.author == 'me') {
         this.requireReply(message)
       }
@@ -107,8 +166,32 @@ export default {
       // called when the user clicks on the botton to close the chat
       this.isChatOpen = false
     },
+    sendLog() {
+      if (!this.log.ip) return
+      this.log.exit_at = new Date()
+      navigator.sendBeacon(`${this.$http.options.root}/chatbot/log`, new Blob([JSON.stringify({
+        ip: this.log.ip,
+        title: document.title,
+        url: location.href,
+        enter_at: this.log.enter_at,
+        exit_at: this.log.exit_at,
+        messages: this.messageList.map(message => ({
+          author: message.author,
+          text: message.data.text,
+        })),
+      })], {type: 'text/plain; charset=UTF-8'}))
+      this.log.sent = true
+    },
+    handleSendLog() {
+      this.everTouched && !this.log.sent && this.sendLog()
+    },
   },
   mounted() {
+    fetch('https://api.ipify.org?format=json').then(response => response.json()).then(data => {
+      this.log.ip = data.ip
+    })
+    window.addEventListener('unload', this.handleSendLog)
+    window.addEventListener('beforeunload', this.handleSendLog)
   },
 }
 </script>
