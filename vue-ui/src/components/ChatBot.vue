@@ -37,7 +37,7 @@ export default {
           id: 'email',
           type: 'email',
           filled: false,
-          label: `What is you email? (We don't spam... I promise)`,
+          label: `What is your email? (We don't spam... I promise)`,
         },
         {
           id: 'zip',
