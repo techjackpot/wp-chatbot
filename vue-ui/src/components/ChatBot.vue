@@ -47,6 +47,9 @@ export default {
         },
       ],
       everTouched: false,
+      touchWords: [
+        'quote',
+      ],
       participants: [
         {
           id: 'bot',
@@ -141,7 +144,9 @@ export default {
     },
     onMessageWasSent (message) {
       if (!this.everTouched) {
-        this.everTouched = true;
+        if (this.touchWords.some(word => message.toLowerCase().includes(word))) {
+          this.everTouched = true;
+        }
       }
       const lastMessage = this.messageList[this.messageList.length - 1];
 
