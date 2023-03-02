@@ -50,6 +50,7 @@ export default {
       touchWords: [
         'quote',
       ],
+      promptTimeout: 30,
       participants: [
         {
           id: 'bot',
@@ -140,7 +141,7 @@ export default {
       }
       this.prefillTimerID = setTimeout(() => {
         this.checkPrefills();
-      }, 20 * 1000)
+      }, this.promptTimeout * 1000)
     },
     onMessageWasSent (message) {
       if (!this.everTouched) {
