@@ -50,6 +50,17 @@ export default {
       touchWords: [
         'quote',
       ],
+      positiveWords: [
+        'yeah',
+        'yes',
+        'yep',
+      ],
+      negativeWords: [
+        'no',
+        'nah',
+        'none',
+        'nope',
+      ],
       promptTimeout: 30,
       participants: [
         {
@@ -100,7 +111,20 @@ export default {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
         this.addNewMessage({ author: 'bot', type: 'text', data: { text: prefill.label }, prefill_id: prefill.id, }, false);
       } else {
-        this.addNewMessage({ type: 'text', author: 'bot', data: { text: `Additional questions?` }, }, false);
+        this.addNewMessage({
+          type: 'text',
+          author: 'bot',
+          data: {
+            text: `Additional questions?`,
+          },
+          suggestions: [
+            'Yes',
+            'No',
+          ],
+          options: {
+            generic_followup: true,
+          },
+        }, false);
       }
     },
     receiveMessage (text) {
@@ -143,13 +167,34 @@ export default {
         this.checkPrefills();
       }, this.promptTimeout * 1000)
     },
+    getLasMessage() {
+      return this.messageList[this.messageList.length - 1];
+    },
     onMessageWasSent (message) {
       if (!this.everTouched) {
         if (this.touchWords.some(word => message.data.text.toLowerCase().includes(word))) {
           this.everTouched = true;
         }
       }
-      const lastMessage = this.messageList[this.messageList.length - 1];
+
+      const lastMessage = this.getLasMessage();
+      if (lastMessage.options && lastMessage.options.generic_followup) {
+        if (this.positiveWords.some(word => message.data.text.toLowerCase() == word)) {
+          this.addNewMessage(message, false);
+          return;
+        }
+        if (this.negativeWords.some(word => message.data.text.toLowerCase() == word)) {
+          this.addNewMessage(message, false);
+          this.addNewMessage({
+            type: 'text',
+            author: 'bot',
+            data: {
+              text: `Thank you, I'm here if you need additional assistance`,
+            },
+          }, false);
+          return;
+        }
+      }
 
       // called when the user sends a message
       this.addNewMessage(message, false);
