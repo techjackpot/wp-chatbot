@@ -58,7 +58,7 @@ export default {
         },
       ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
       messageList: [
-        { type: 'text', author: 'bot', data: { text: `Hello, thank you for visiting. How may I help you?` }, },
+        { type: 'text', author: 'bot', data: { text: `Would you like to receive more information?` }, },
       ], // the list of the messages to show, can be paginated and adjusted dynamically
       newMessagesCount: 1,
       isChatOpen: false, // to determine whether the chat window should be open or closed
