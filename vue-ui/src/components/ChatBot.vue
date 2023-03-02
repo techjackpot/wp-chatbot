@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chat-bot-wrapper">
     <beautiful-chat
       :participants="participants"
       :onMessageWasSent="onMessageWasSent"
@@ -10,6 +10,7 @@
       :open="openChat"
       :showTypingIndicator="showTypingIndicator"
       :colors="colors"
+      :messageStyling="false"
       title="SixAxis Support"
       alwaysScrollToBottom
       disableUserListToggle
@@ -252,5 +253,13 @@ export default {
 }
 .sc-chat-window {
   z-index: 9999;
+}
+.sc-suggestions-row {
+  margin-bottom: 6px;
+}
+.chat-bot-wrapper {
+  .sc-message-list {
+    padding-bottom: 10px;
+  }
 }
 </style>
