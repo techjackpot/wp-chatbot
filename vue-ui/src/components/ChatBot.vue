@@ -145,7 +145,7 @@ export default {
     },
     onMessageWasSent (message) {
       if (!this.everTouched) {
-        if (this.touchWords.some(word => message.toLowerCase().includes(word))) {
+        if (this.touchWords.some(word => message.data.text.toLowerCase().includes(word))) {
           this.everTouched = true;
         }
       }
