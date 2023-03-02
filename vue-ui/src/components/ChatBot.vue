@@ -35,6 +35,12 @@ export default {
       prefillTimerID: null,
       prefills: [
         {
+          id: 'name',
+          type: 'name',
+          filled: false,
+          label: `What is your name?`,
+        },
+        {
           id: 'email',
           type: 'email',
           filled: false,
