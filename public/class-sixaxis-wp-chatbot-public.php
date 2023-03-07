@@ -106,7 +106,7 @@ class Sixaxis_Wp_Chatbot_Public {
 	 * Hooked on init
 	 */
 	public function add_shortcodes() {
-		add_shortcode( 'chatbot', array( $this, 'render_shortcode_chatbot' ));
+		add_shortcode( 'chatbot', array( $this, 'render_shortcode_chatbot' ) );
 	}
 
 	/**
@@ -125,11 +125,9 @@ class Sixaxis_Wp_Chatbot_Public {
 		wp_enqueue_script( $this->plugin_name . '-vue-app' );
 
 		ob_start();
-		?>
 
-		<div id="chatbot-widget">Chatbot</div>
+		echo '<div id="chatbot-widget">Chatbot</div>';
 
-		<?php
 		$output = ob_get_clean();
 
 		return $output;

@@ -54,6 +54,7 @@ export default {
         },
       ],
       everTouched: false,
+      toLead: false,
       touchWords: [
         'quote',
       ],
@@ -179,9 +180,10 @@ export default {
     },
     onMessageWasSent (message) {
       if (!this.everTouched) {
-        if (this.touchWords.some(word => message.data.text.toLowerCase().includes(word))) {
-          this.everTouched = true;
-        }
+        this.everTouched = true;
+      }
+      if (this.touchWords.some(word => message.data.text.toLowerCase().includes(word))) {
+        this.toLead = true;
       }
 
       const lastMessage = this.getLasMessage();
@@ -237,6 +239,7 @@ export default {
           author: message.author,
           text: message.data.text,
         })),
+        toLead: this.toLead,
       })], {type: 'text/plain; charset=UTF-8'}))
       this.log.sent = true
     },
