@@ -18,6 +18,9 @@
       <template v-slot:user-avatar="{}">
         <div></div>
       </template>
+      <template v-slot:text-message-body="{ message }">
+        {{message.data.text | conversion(status, message)}}
+      </template>
     </beautiful-chat>
   </div>
 </template>
@@ -26,6 +29,7 @@
 export default {
   data() {
     return {
+      status: {},
       log: {
         ip: '',
         sent: false,
@@ -138,7 +142,7 @@ export default {
     receiveMessage (text) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.addNewMessage({ author: 'bot', type: 'text', data: { text } })
+        this.addNewMessage({ author: 'bot', type: 'text', data: { text }, need_conversion: true, })
 
         if (text.startsWith(`Sorry, I don't know that as yet.`)) {
           // this.checkPrefills();
@@ -247,12 +251,28 @@ export default {
       this.everTouched && !this.log.sent && this.sendLog()
     },
   },
+  filters: {
+    conversion: function (value, status, message) {
+      if (!value) return ''
+      if (!message.need_conversion) return value
+      if (!status.conversion || !status.conversion.from) return value
+      value = value.toString()
+
+      var from = new RegExp(status.conversion.from, 'g')
+      return value.replace(from, status.conversion.to);
+    }
+  },
   mounted() {
     fetch('https://api.ipify.org?format=json').then(response => response.json()).then(data => {
       this.log.ip = data.ip
     })
     window.addEventListener('unload', this.handleSendLog)
     window.addEventListener('beforeunload', this.handleSendLog)
+    this.$http.get('chatbot/status')
+      .then((response) => response.body)
+      .then((data) => {
+        this.status = data;
+      });
   },
 }
 </script>
