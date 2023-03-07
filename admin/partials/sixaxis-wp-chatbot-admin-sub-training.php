@@ -15,9 +15,9 @@
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="wrap">
-  <h2>Embedding</h2>
-  <form class="chatbot-embedding-form" method="POST" style="display: none;">
-    <div class="chatbot-embedding-status"></div>
-    <p class="submit"><input type="submit" name="submit" id="chatbot-embedding-submit" class="button button-primary" value="Trigger"></p>
+  <h2>Training</h2>
+  <form class="chatbot-training-form" method="POST" style="display: none;">
+    <div class="chatbot-training-status"></div>
+    <p class="submit"><input type="submit" name="submit" id="chatbot-training-submit" class="button button-primary" value="Trigger"></p>
   </form>
 </div>

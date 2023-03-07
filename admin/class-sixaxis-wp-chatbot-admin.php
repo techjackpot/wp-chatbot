@@ -106,8 +106,8 @@ class Sixaxis_Wp_Chatbot_Admin {
 		if (strpos($hook, 'sixaxis-wp-chatbot-export') !== false) {
 			wp_enqueue_script( $this->plugin_name . '-export', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-export.js', array( 'jquery' ), $this->version, false );
 		}
-		if (strpos($hook, 'sixaxis-wp-chatbot-embedding') !== false) {
-			wp_enqueue_script( $this->plugin_name . '-embedding', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-embedding.js', array( 'jquery' ), $this->version, false );
+		if (strpos($hook, 'sixaxis-wp-chatbot-training') !== false) {
+			wp_enqueue_script( $this->plugin_name . '-training', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-training.js', array( 'jquery' ), $this->version, false );
 		}
 		if (strpos($hook, 'sixaxis-wp-chatbot-conversion') !== false) {
 			wp_enqueue_script( $this->plugin_name . '-conversion', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-conversion.js', array( 'jquery' ), $this->version, false );
@@ -143,11 +143,11 @@ class Sixaxis_Wp_Chatbot_Admin {
 		);
 		add_submenu_page(
 			'sixaxis-wp-chatbot-settings',
-			'SixAxis WP ChatBot - Embedding Data',
-			'Embedding Data',
+			'SixAxis WP ChatBot - Training Data',
+			'Training Data',
 			'manage_options',
-			'sixaxis-wp-chatbot-embedding',
-			[$this, 'show_admin_sub_embedding_page'],
+			'sixaxis-wp-chatbot-training',
+			[$this, 'show_admin_sub_training_page'],
 		);
 		add_submenu_page(
 			'sixaxis-wp-chatbot-settings',
@@ -167,8 +167,8 @@ class Sixaxis_Wp_Chatbot_Admin {
 	public function show_admin_sub_conversion_page() {
 		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-conversion.php';
 	}
-	public function show_admin_sub_embedding_page() {
-		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-embedding.php';
+	public function show_admin_sub_training_page() {
+		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-training.php';
 	}
 	public function show_admin_sub_export_page() {
 		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-export.php';

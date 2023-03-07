@@ -35,12 +35,12 @@
 
     function checkStatus() {
       $.get(`${api_server}/chatbot/status`, function(data) {
-        $('.chatbot-embedding-status').html(`
+        $('.chatbot-training-status').html(`
           <p>Last Run Date: <span>${new Date(data.crawl.lastRunDate).toLocaleString()}</span></p>
           ${data.crawl.is_running && `<p>Status: <strong>Running</strong></p>` || ''}
         `);
-        $('#chatbot-embedding-submit').prop('disabled', data.crawl.is_running);
-        $('.chatbot-embedding-form').show();
+        $('#chatbot-training-submit').prop('disabled', data.crawl.is_running);
+        $('.chatbot-training-form').show();
       });
     }
 
@@ -50,12 +50,12 @@
 
     checkStatus();
 
-    $('.chatbot-embedding-form').on('submit', function(e) {
-      if (!confirm('Do you want to start crawling embedding data?')) {
+    $('.chatbot-training-form').on('submit', function(e) {
+      if (!confirm('Do you want to start crawling training data?')) {
         return false;
       }
       $.post(`${api_server}/chatbot/crawl`, function(data) {
-        $('#chatbot-embedding-submit').prop('disabled', true);
+        $('#chatbot-training-submit').prop('disabled', true);
         checkStatus();
       });
       return false;

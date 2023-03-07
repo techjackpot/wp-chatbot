@@ -256,7 +256,8 @@ export default {
       if (!value) return ''
       if (!message.need_conversion) return value
       if (!status.conversion || !status.conversion.from) return value
-      value = value.toString()
+
+      value = value.toString().replaceAll(status.conversion.from, status.conversion.to);
 
       var from = new RegExp(status.conversion.from, 'g')
       return value.replace(from, status.conversion.to);
