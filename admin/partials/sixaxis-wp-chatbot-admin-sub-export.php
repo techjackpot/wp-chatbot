@@ -19,6 +19,9 @@
   <form class="chatbot-export-form" method="POST">
     <table class="form-table">
       <tr>
+        <th colspan="2">Export Date/Time is in UTC format</th>
+      </tr>
+      <tr>
         <th>From:</th>
         <td><input type="date" id="date_from" value="<?php echo date('Y-m-d'); ?>" /></td>
       </tr>
