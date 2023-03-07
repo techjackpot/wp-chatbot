@@ -98,12 +98,17 @@ class Sixaxis_Wp_Chatbot_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		if (strpos($hook, 'sixaxis-wp-chatbot') === false) {
 			return;
 		}
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin.js', array( 'jquery' ), $this->version, false );
 
+		if (strpos($hook, 'sixaxis-wp-chatbot-export') !== false) {
+			wp_enqueue_script( $this->plugin_name . '-export', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-export.js', array( 'jquery' ), $this->version, false );
+		}
+		if (strpos($hook, 'sixaxis-wp-chatbot-embedding') !== false) {
+			wp_enqueue_script( $this->plugin_name . '-embedding', plugin_dir_url( __FILE__ ) . 'js/sixaxis-wp-chatbot-admin-sub-embedding.js', array( 'jquery' ), $this->version, false );
+		}
 	}
 
 	/**
@@ -127,6 +132,14 @@ class Sixaxis_Wp_Chatbot_Admin {
 		);
 		add_submenu_page(
 			'sixaxis-wp-chatbot-settings',
+			'SixAxis WP ChatBot - Embedding Data',
+			'Embedding Data',
+			'manage_options',
+			'sixaxis-wp-chatbot-embedding',
+			[$this, 'show_admin_sub_embedding_page'],
+		);
+		add_submenu_page(
+			'sixaxis-wp-chatbot-settings',
 			'SixAxis WP ChatBot - Export',
 			'Export',
 			'manage_options',
@@ -139,6 +152,9 @@ class Sixaxis_Wp_Chatbot_Admin {
 	}
 	public function show_admin_sub_settings_page() {
 		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-settings.php';
+	}
+	public function show_admin_sub_embedding_page() {
+		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-embedding.php';
 	}
 	public function show_admin_sub_export_page() {
 		include plugin_dir_path(__FILE__) . 'partials/sixaxis-wp-chatbot-admin-sub-export.php';
