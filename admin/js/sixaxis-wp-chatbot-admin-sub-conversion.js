@@ -35,28 +35,24 @@
 
     function checkStatus() {
       $.get(`${api_server}/chatbot/status`, function(data) {
-        $('.chatbot-embedding-status').html(`
-          <p>Last Run Date: <span>${new Date(data.crawl.lastRunDate).toLocaleString()}</span></p>
-          ${data.crawl.is_running && `<p>Status: <strong>Running</strong></p>` || ''}
-        `);
-        $('#chatbot-embedding-submit').prop('disabled', data.crawl.is_running);
-        $('.chatbot-embedding-form').show();
+        if (!data.conversion) return;
+        $('#conversion_from').val(data.conversion.from);
+        $('#conversion_to').val(data.conversion.to);
+        $('.chatbot-conversion-form').show();
       });
     }
 
-    setInterval(function() {
-      checkStatus();
-    }, 1000 * 15);
-
     checkStatus();
 
-    $('.chatbot-embedding-form').on('submit', function(e) {
-      if (!confirm('Do you want to start crawling embedding data?')) {
-        return false;
-      }
-      $.post(`${api_server}/chatbot/crawl`, function(data) {
-        $('#chatbot-embedding-submit').prop('disabled', true);
-        checkStatus();
+    $('.chatbot-conversion-form').on('submit', function(e) {
+      $('.chatbot-conversion-form').addClass('loading');
+      $('#chatbot-conversion-submit').prop('disabled', true);
+      $.post(`${api_server}/chatbot/set_conversion`, {
+        from: $('#conversion_from').val(),
+        to: $('#conversion_to').val(),
+      }, function(data) {
+				$('.chatbot-conversion-form').removeClass('loading');
+				$('#chatbot-conversion-submit').prop('disabled', false);
       });
       return false;
     })
