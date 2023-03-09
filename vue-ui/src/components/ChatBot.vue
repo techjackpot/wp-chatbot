@@ -73,7 +73,7 @@ export default {
         'none',
         'nope',
       ],
-      promptTimeout: 30,
+      promptTimeout: 300,
       participants: [
         {
           id: 'bot',
@@ -139,13 +139,27 @@ export default {
         }, false);
       }
     },
-    receiveMessage (text) {
+    handlePreFills(check_prefill = false) {
+      if (this.prefillTimerID) {
+        clearTimeout(this.prefillTimerID);
+      }
+      if (!check_prefill) {
+        return
+      }
+      this.prefillTimerID = setTimeout(() => {
+        this.checkPrefills();
+      }, this.promptTimeout * 1000)
+    },
+    receiveMessage (text, question) {
       if (text.length > 0) {
         this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.addNewMessage({ author: 'bot', type: 'text', data: { text }, need_conversion: true, })
+        this.addNewMessage({ author: 'bot', type: 'text', data: { text }, need_conversion: true, }, true)
 
         if (text.startsWith(`Sorry, I don't know that as yet.`)) {
           // this.checkPrefills();
+        }
+        if (question.data.text.toLowerCase().includes('quote')) {
+          this.checkPrefills();
         }
       }
     },
@@ -158,7 +172,7 @@ export default {
       .then(response => response.data.data)
       .then((data) => {
         const {answer} = data
-        this.receiveMessage(answer)
+        this.receiveMessage(answer, message)
       })
       .catch(e => {
         console.log(e);
@@ -167,17 +181,9 @@ export default {
         this.showTypingIndicator = ''
       })
     },
-    addNewMessage (message, check_prefill = true) {
+    addNewMessage (message, check_prefill = false) {
       this.messageList = [ ...this.messageList, message ]
-      if (this.prefillTimerID) {
-        clearTimeout(this.prefillTimerID);
-      }
-      if (!check_prefill) {
-        return
-      }
-      this.prefillTimerID = setTimeout(() => {
-        this.checkPrefills();
-      }, this.promptTimeout * 1000)
+      this.handlePreFills(check_prefill);
     },
     getLasMessage() {
       return this.messageList[this.messageList.length - 1];
@@ -193,11 +199,11 @@ export default {
       const lastMessage = this.getLasMessage();
       if (lastMessage.options && lastMessage.options.generic_followup) {
         if (this.positiveWords.some(word => message.data.text.toLowerCase() == word)) {
-          this.addNewMessage(message, false);
+          this.addNewMessage(message);
           return;
         }
         if (this.negativeWords.some(word => message.data.text.toLowerCase() == word)) {
-          this.addNewMessage(message, false);
+          this.addNewMessage(message);
           this.addNewMessage({
             type: 'text',
             author: 'bot',
@@ -210,7 +216,7 @@ export default {
       }
 
       // called when the user sends a message
-      this.addNewMessage(message, false);
+      this.addNewMessage(message);
       
       if (lastMessage.prefill_id) {
         this.prefills.find(prefill => prefill.id == lastMessage.prefill_id).filled = true;
