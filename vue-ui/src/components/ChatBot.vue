@@ -98,7 +98,7 @@ export default {
           bg: '#fff'
         },
         sentMessage: {
-          bg: '#F44336',
+          bg: '#FF8500',
           text: '#fff'
         },
         receivedMessage: {
