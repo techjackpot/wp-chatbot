@@ -11,7 +11,7 @@
       :showTypingIndicator="showTypingIndicator"
       :colors="colors"
       :messageStyling="false"
-      title="SixAxis Support"
+      title="Upside Chat"
       alwaysScrollToBottom
       disableUserListToggle
     >
@@ -88,11 +88,11 @@ export default {
       showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
       colors: {
         header: {
-          bg: '#D32F2F',
+          bg: '#FF8500',
           text: '#fff'
         },
         launcher: {
-          bg: '#D32F2F'
+          bg: '#FF8500'
         },
         messageList: {
           bg: '#fff'
